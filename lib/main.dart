@@ -1,3 +1,4 @@
+import 'package:find_best_route/pages/home.dart';
 import 'package:find_best_route/util/shared_preferences_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -75,14 +76,23 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   bool _isVietnamese = false;
+
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 3, vsync: this)
+      ..addListener(_handleTabIndexChanged);
     prepare();
+  }
+
+  @override
+  void dispose() {
+    _tabController.removeListener(_handleTabIndexChanged);
+    super.dispose();
   }
 
   Future<void> prepare() async {
@@ -93,48 +103,56 @@ class _MyHomePageState extends State<MyHomePage> {
     print('KhaiTQ-isVietnamese:$_isVietnamese');
   }
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('Find Best Route'),
+        bottom: TabBar(controller: _tabController, tabs: [
+          Tab(
+            text: AppLocalizations.of(context).home,
+            icon: const Icon(Icons.home),
+          ),
+          Tab(
+            text: AppLocalizations.of(context).tracking,
+            icon: const Icon(Icons.track_changes),
+          ),
+          Tab(
+            text: AppLocalizations.of(context).settings,
+            icon: const Icon(Icons.settings),
+          ),
+        ]),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            Text(AppLocalizations.of(context).helloWorld),
-            Switch(
-                value: _isVietnamese,
-                onChanged: (isVietnamese) {
-                  setState(() {
-                    _isVietnamese = isVietnamese;
-                  });
-                  MyApp.of(context).then((app) {
-                    app!.setLocale(Locale(isVietnamese ? 'vi' : 'en'));
-                  });
-                })
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: TabBarView(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: _tabController,
+          children: [
+            HomePage(),
+            Center(child: Text(AppLocalizations.of(context).tracking)),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text('Ngôn ngữ tiếng việt'),
+                  Switch(
+                      value: _isVietnamese,
+                      onChanged: (value) {
+                        setState(() {
+                          _isVietnamese = value;
+                        });
+                        MyApp.of(context).then((app) {
+                          app!.setLocale(_isVietnamese
+                              ? const Locale('vi')
+                              : const Locale('en'));
+                        });
+                      })
+                ],
+              ),
+            )
+          ]), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  void _handleTabIndexChanged() {}
 }

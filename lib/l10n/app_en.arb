@@ -1,6 +1,14 @@
 {
-    "helloWorld": "Hello World!",
-    "@helloWorld": {
-      "description": "The conventional newborn programmer greeting"
+    "home": "Home",
+    "@home": {
+      "description": "Home"
+    },
+    "tracking": "Tracking",
+    "@tracking": {
+      "description": "Tracking"
+    },
+    "settings": "Settings",
+    "@settings": {
+      "description": "Settings"
     }
 }
