@@ -10,5 +10,9 @@
     "settings": "Settings",
     "@settings": {
       "description": "Settings"
+    },
+    "newRoute": "New Route",
+    "@newRoute": {
+      "description": "New Route"
     }
 }

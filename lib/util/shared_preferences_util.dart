@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferenceUtil {
-  static const LANGUAGE_CODE_ID = "LANGUAGE_CODE_ID";
+  static const languageCodeId = "LANGUAGE_CODE_ID";
 
   static final SharedPreferenceUtil _instance =
       SharedPreferenceUtil._internal();
@@ -19,11 +19,11 @@ class SharedPreferenceUtil {
   }
 
   Future<String> getLanguageCode() async {
-    var languageCode = _prefs.getString(LANGUAGE_CODE_ID);
+    var languageCode = _prefs.getString(languageCodeId);
     return languageCode ?? 'vi';
   }
 
   Future<void> setLanguageCode(String languageCode) async {
-    _prefs.setString(LANGUAGE_CODE_ID, languageCode);
+    _prefs.setString(languageCodeId, languageCode);
   }
 }
